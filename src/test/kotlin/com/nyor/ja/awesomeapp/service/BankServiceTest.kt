@@ -1,7 +1,6 @@
 package com.nyor.ja.awesomeapp.service
 
 import com.nyor.ja.awesomeapp.datasource.BankDatasource
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

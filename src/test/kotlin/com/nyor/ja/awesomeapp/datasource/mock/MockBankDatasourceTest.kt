@@ -18,8 +18,8 @@ internal class MockBankDatasourceTest {
     fun `should provide some mock data`() {
         val banks = mockBankDatasource.retrieveBanks()
 
-        assertThat(banks).allMatch{it.accountNumber.isNotBlank()}
-        assertThat(banks).anyMatch{it.trust != 0.0}
-        assertThat(banks).anyMatch{it.transactionFee != 0}
+        assertThat(banks).allMatch { it.accountNumber.isNotBlank() }
+        assertThat(banks).anyMatch { it.trust != 0.0 }
+        assertThat(banks).anyMatch { it.transactionFee != 0 }
     }
 }

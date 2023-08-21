@@ -1,5 +1,7 @@
 package com.nyor.ja.awesomeapp.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.nyor.ja.awesomeapp.model.Bank
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -7,14 +9,19 @@ import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 
 @AutoConfigureMockMvc
 @SpringBootTest
-internal class BankControllerTest {
-    @Autowired
-    lateinit var mockMvc: MockMvc
+internal class BankControllerTest @Autowired constructor(
+    val mockMvc: MockMvc,
+    val objectMapper: ObjectMapper
+) {
+
+    val baseUrl = "/api/banks/"
 
     @Nested
     @DisplayName("getBanks()")
@@ -22,9 +29,9 @@ internal class BankControllerTest {
     inner class getBanks {
         @Test
         fun `should return all banks`() {
-            mockMvc.get("/api/banks")
-                    .andDo { print() }
-                    .andExpect { status { isOk() } }
+            mockMvc.get(baseUrl)
+                .andDo { print() }
+                .andExpect { status { isOk() } }
         }
 
     }
@@ -35,16 +42,49 @@ internal class BankControllerTest {
     inner class getBank {
         @Test
         fun `should return single bank`() {
-            mockMvc.get("/api/banks/1234")
-                    .andDo { print() }
-                    .andExpect { status { isOk() } }
+            mockMvc.get(baseUrl + "1234")
+                .andDo { print() }
+                .andExpect { status { isOk() } }
         }
 
         @Test
         fun `should not return single bank`() {
-            mockMvc.get("/api/banks/12346")
-                    .andDo { print() }
-                    .andExpect { status { isNotFound() } }
+            mockMvc.get(baseUrl + "12346")
+                .andDo { print() }
+                .andExpect { status { isNotFound() } }
+        }
+    }
+
+    @Nested
+    @DisplayName("createBank()")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class createBank {
+
+        @Test
+        fun `it should create bank`() {
+
+            val newBank = Bank("1234567", 100.0, 100)
+
+            mockMvc.post(baseUrl) {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(newBank)
+            }
+                .andDo { print() }
+                .andExpect { status { isCreated() } }
+        }
+
+
+        @Test
+        fun `it should not create bank since it is existing`() {
+
+            val newBank = Bank("1234", 100.0, 100)
+
+            mockMvc.post(baseUrl) {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(newBank)
+            }
+                .andDo { print() }
+                .andExpect { status { isBadRequest() } }
         }
     }
 
