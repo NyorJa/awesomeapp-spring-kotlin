@@ -26,4 +26,18 @@ class MockBankDatasource : BankDatasource {
         banks.add(bank)
         return bank
     }
+
+    override fun updateBank(bank: Bank): Bank {
+        val currentBank = retrieveBank(bank.accountNumber)
+
+        banks.remove(currentBank)
+        banks.add(bank)
+
+        return bank
+    }
+
+    override fun deleteBank(accountNumber: String) {
+        val currentBank = retrieveBank(accountNumber)
+        banks.remove(currentBank)
+    }
 }

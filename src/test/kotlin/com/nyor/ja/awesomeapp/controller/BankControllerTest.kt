@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.*
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -85,6 +83,64 @@ internal class BankControllerTest @Autowired constructor(
             }
                 .andDo { print() }
                 .andExpect { status { isBadRequest() } }
+        }
+    }
+
+
+    @Nested
+    @DisplayName("updateBank()")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class updateBank {
+
+        @Test
+        fun `it should create bank`() {
+
+            val newBank = Bank("1234", 100.0, 100)
+
+            mockMvc.put(baseUrl) {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(newBank)
+            }
+                .andDo { print() }
+                .andExpect { status { isOk() } }
+        }
+
+
+        @Test
+        fun `it should not update bank since it is not existing`() {
+
+            val newBank = Bank("123456789", 100.0, 100)
+
+            mockMvc.put(baseUrl) {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(newBank)
+            }
+                .andDo { print() }
+                .andExpect { status { isNotFound() } }
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteBank()")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class deleteBank {
+
+        @Test
+        fun `it should delete bank`() {
+
+
+            mockMvc.delete(baseUrl + "1234")
+                .andDo { print() }
+                .andExpect { status { isNoContent() } }
+        }
+
+
+        @Test
+        fun `it should not update bank since it is not existing`() {
+
+            mockMvc.delete(baseUrl + "12341231231")
+                .andDo { print() }
+                .andExpect { status { isNotFound() } }
         }
     }
 
