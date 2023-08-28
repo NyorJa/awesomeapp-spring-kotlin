@@ -61,7 +61,7 @@ internal class BankControllerTest @Autowired constructor(
         @Test
         fun `it should create bank`() {
 
-            val newBank = Bank("1234567", 100.0, 100)
+            val newBank = Bank("1234567", "piolo", 100.0, 100)
 
             mockMvc.post(baseUrl) {
                 contentType = MediaType.APPLICATION_JSON
@@ -75,7 +75,7 @@ internal class BankControllerTest @Autowired constructor(
         @Test
         fun `it should not create bank since it is existing`() {
 
-            val newBank = Bank("1234", 100.0, 100)
+            val newBank = Bank("1234", "piolo", 100.0, 100)
 
             mockMvc.post(baseUrl) {
                 contentType = MediaType.APPLICATION_JSON
@@ -95,7 +95,7 @@ internal class BankControllerTest @Autowired constructor(
         @Test
         fun `it should create bank`() {
 
-            val newBank = Bank("1234", 100.0, 100)
+            val newBank = Bank("1234", "piolo",100.0 ,100)
 
             mockMvc.put(baseUrl) {
                 contentType = MediaType.APPLICATION_JSON
@@ -109,7 +109,7 @@ internal class BankControllerTest @Autowired constructor(
         @Test
         fun `it should not update bank since it is not existing`() {
 
-            val newBank = Bank("123456789", 100.0, 100)
+            val newBank = Bank("123456789", "piolo",100.0, 100)
 
             mockMvc.put(baseUrl) {
                 contentType = MediaType.APPLICATION_JSON
