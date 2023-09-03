@@ -54,26 +54,25 @@ class BankServiceImpl @Autowired constructor(private val bankRepository: BankRep
     }
 
     override fun findAll(): List<Bank> {
+        return bankRepository.findAll().toList()
+    }
+
+    override fun deleteById(id: Long) {
         try {
-            val banks = bankRepository.findAll()
-            return banks.toList()
-        } catch (e: Exception) {
-            log.error("Error retrieving all existing messages: {}", e.message, e)
+            bankRepository.deleteById(id)
+        } catch(e: DataIntegrityViolationException) {
+            log.error("Error deleting Bank with id: " + id + " - " + e.message, e)
             throw ServiceException("Error retrieving all existing banks", e)
         }
     }
 
-    override fun deleteById(id: Long) {
-        TODO("Not yet implemented")
-    }
-
     fun deleteByAccountNumber(accountNumber: String) {
-        val bank = findByAccountNumber(accountNumber)
-
         try {
-            bank.id?.let { bankRepository.deleteById(it) }
-        } catch(e: DataIntegrityViolationException) {
+            val bank = findByAccountNumber(accountNumber)
+            bank.id?.let { deleteById(it) }
+        } catch(e: EntityNotFoundException) {
             log.error("Error deleting Bank with id: " + accountNumber + " - " + e.message, e)
+            throw e
         }
 
     }
