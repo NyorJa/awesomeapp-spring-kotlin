@@ -3,6 +3,7 @@ package com.nyor.ja.awesomeapp.controller
 import com.nyor.ja.awesomeapp.model.Bank
 import com.nyor.ja.awesomeapp.service.BankService
 import com.nyor.ja.awesomeapp.service.impl.BankServiceImpl
+import org.hibernate.service.spi.ServiceException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -11,13 +12,17 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/banks/")
 class BankController(private val service: BankServiceImpl) {
 
-/*    @ExceptionHandler(IllegalArgumentException::class)
+    @ExceptionHandler(IllegalArgumentException::class)
     fun handlerBadRequest(e: IllegalArgumentException): ResponseEntity<String> =
+        ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
+
+    @ExceptionHandler(ServiceException::class)
+    fun handleDuplicate(e: ServiceException): ResponseEntity<String> =
         ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
 
     @ExceptionHandler(NoSuchElementException::class)
     fun handlerNotFound(e: NoSuchElementException): ResponseEntity<String> =
-        ResponseEntity(e.message, HttpStatus.NOT_FOUND)*/
+        ResponseEntity(e.message, HttpStatus.NOT_FOUND)
 
     @GetMapping
     fun getBanks(): Collection<Bank> = service.findAll()

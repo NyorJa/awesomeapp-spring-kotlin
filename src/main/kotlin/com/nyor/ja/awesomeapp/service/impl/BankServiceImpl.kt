@@ -15,14 +15,14 @@ import java.lang.Exception
 @Service
 class BankServiceImpl @Autowired constructor(private val bankRepository: BankRepository) : BankService {
     companion object {
-        const val MESSAGE_NOT_FOUND = "There is no member found with id: "
+        const val BANK_NOT_FOUND = "There is no bank found with id: "
     }
 
     private val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
 
     override fun findByAccountNumber(accountNumber: String): Bank {
-        return bankRepository.findByAccountNumber(accountNumber).orElseThrow { EntityNotFoundException(MESSAGE_NOT_FOUND + accountNumber) }
+        return bankRepository.findByAccountNumber(accountNumber).orElseThrow { EntityNotFoundException(BANK_NOT_FOUND + accountNumber) }
     }
 
     override fun create(entity: Bank): Bank {
@@ -30,7 +30,7 @@ class BankServiceImpl @Autowired constructor(private val bankRepository: BankRep
             return bankRepository.save(entity)
         } catch (e: Exception) {
             log.error("Error persisting a new Message: {}", e.message, e)
-            throw ServiceException("Error persisting a new Message", e)
+            throw ServiceException("Error persisting a new Bank", e)
         }
     }
 
@@ -45,12 +45,12 @@ class BankServiceImpl @Autowired constructor(private val bankRepository: BankRep
             return bankRepository.save(persistedEntity);
         } catch (e: Exception) {
             log.error("Error updating a Message: {}", e.message, e)
-            throw ServiceException("Error updating a Message", e)
+            throw IllegalArgumentException("Error updating a Bank", e)
         }
     }
 
     override fun findById(id: Long): Bank {
-        return bankRepository.findById(id).orElseThrow { EntityNotFoundException(MESSAGE_NOT_FOUND + id) }
+        return bankRepository.findById(id).orElseThrow { EntityNotFoundException(BANK_NOT_FOUND + id) }
     }
 
     override fun findAll(): List<Bank> {
@@ -59,7 +59,7 @@ class BankServiceImpl @Autowired constructor(private val bankRepository: BankRep
             return banks.toList()
         } catch (e: Exception) {
             log.error("Error retrieving all existing messages: {}", e.message, e)
-            throw ServiceException("Error retrieving all existing messages", e)
+            throw ServiceException("Error retrieving all existing banks", e)
         }
     }
 
@@ -73,7 +73,7 @@ class BankServiceImpl @Autowired constructor(private val bankRepository: BankRep
         try {
             bank.id?.let { bankRepository.deleteById(it) }
         } catch(e: DataIntegrityViolationException) {
-            log.error("Error deleting Message with id: " + accountNumber + " - " + e.message, e)
+            log.error("Error deleting Bank with id: " + accountNumber + " - " + e.message, e)
         }
 
     }
