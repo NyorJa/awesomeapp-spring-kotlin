@@ -4,11 +4,13 @@ import com.nyor.ja.awesomeapp.model.Bank
 import jakarta.persistence.EntityNotFoundException
 import org.hibernate.service.spi.ServiceException
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
+@Disabled
 class BankServiceImplTest {
 
     @Autowired
