@@ -12,3 +12,15 @@ services:
       - MYSQL_PASSWORD=admin
       - MYSQL_USER=admin
       - MYSQL_DATABASE=banks
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8085:80
