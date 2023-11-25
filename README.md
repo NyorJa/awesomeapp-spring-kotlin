@@ -8,6 +8,7 @@
 
 ## How to start
 1. Go to the root directory of the project
-2. `docker compose up -d` to enable mysql and phpmyadmin
-3. `./gradlew  clean build` 
-4. `./gradlew bootRun`
+2. Change branch to sql `git checkout sql`
+3. `docker compose up -d` to enable mysql and phpmyadmin
+4. `./gradlew  clean build` 
+5. `./gradlew bootRun`
