@@ -1,8 +1,8 @@
 package com.nyor.ja.awesomeapp.controller
 
 import com.nyor.ja.awesomeapp.model.Bank
-import com.nyor.ja.awesomeapp.service.BankService
 import com.nyor.ja.awesomeapp.service.impl.BankServiceImpl
+import jakarta.persistence.EntityNotFoundException
 import org.hibernate.service.spi.ServiceException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -24,12 +24,19 @@ class BankController(private val service: BankServiceImpl) {
     fun handlerNotFound(e: NoSuchElementException): ResponseEntity<String> =
         ResponseEntity(e.message, HttpStatus.NOT_FOUND)
 
+    @ExceptionHandler(EntityNotFoundException::class)
+    fun handlerNotFound(e: EntityNotFoundException): ResponseEntity<String> =
+        ResponseEntity(e.message, HttpStatus.NOT_FOUND)
+
     @GetMapping
     fun getBanks(): Collection<Bank> = service.findAll()
 
-    @GetMapping("{accountNumber}")
-    fun getBank(@PathVariable accountNumber: String): ResponseEntity<Bank> =
+    @GetMapping("/accountNumber/{accountNumber}")
+    fun getBankByAccountNumber(@PathVariable accountNumber: String): ResponseEntity<Bank> =
         ResponseEntity.ok(service.findByAccountNumber(accountNumber))
+
+    @GetMapping("/{id}")
+    fun getBankById(@PathVariable id: Long): ResponseEntity<Bank> = ResponseEntity.ok(service.findById(id))
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,7 +45,11 @@ class BankController(private val service: BankServiceImpl) {
     @PutMapping
     fun updateBank(@RequestBody bank: Bank): Bank = service.update(bank.accountNumber!!, bank)
 
-    @DeleteMapping("{accountNumber}")
+    @DeleteMapping("/accountNumber/{accountNumber}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteBank(@PathVariable accountNumber: String): Unit = service.deleteByAccountNumber(accountNumber)
+    fun deleteBankByAccountNumber(@PathVariable accountNumber: String): Unit = service.deleteByAccountNumber(accountNumber)
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteBankById(@PathVariable id: Long): Unit = service.deleteById(id)
 }
