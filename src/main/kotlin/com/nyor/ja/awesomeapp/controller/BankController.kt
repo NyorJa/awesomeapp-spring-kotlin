@@ -42,8 +42,8 @@ class BankController(private val service: BankServiceImpl) {
     @ResponseStatus(HttpStatus.CREATED)
     fun addBank(@RequestBody bank: Bank): Bank = service.create(bank)
 
-    @PutMapping
-    fun updateBank(@RequestBody bank: Bank): Bank = service.update(bank.accountNumber!!, bank)
+    @PutMapping("/{id}")
+    fun updateBank(@PathVariable id: Long, @RequestBody bank: Bank): Bank = service.update(id, bank)
 
     @DeleteMapping("/accountNumber/{accountNumber}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
