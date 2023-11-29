@@ -35,8 +35,14 @@ class BankServiceImpl @Autowired constructor(private val bankRepository: BankRep
     }
 
     override fun update(id: Long, entity: Bank): Bank {
-        return entity
-    }
+        try {
+            val persistedEntity = findById(id)
+            updateFields(persistedEntity, entity)
+            return bankRepository.save(persistedEntity);
+        } catch (e: Exception) {
+            log.error("Error updating a Message: {}", e.message, e)
+            throw IllegalArgumentException("Error updating a Bank", e)
+        }    }
 
     fun update(accountNumber: String, entity: Bank) : Bank {
         try {
