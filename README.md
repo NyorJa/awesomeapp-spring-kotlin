@@ -11,4 +11,4 @@
 2. Change branch to sql `git checkout sql`
 3. `docker compose up -d` to enable mysql and phpmyadmin and got to browser check `localhost:8085/` username and password is `admin`
 4. `./gradlew  clean build` 
-5. `./gradlew bootRun`
+5. `./gradlew bootRun`  
